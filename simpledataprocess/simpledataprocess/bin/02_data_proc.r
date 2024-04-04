@@ -74,7 +74,7 @@ if(all(sort(unlist(regions$REG)) == sort(unique(unlist(rawdata$NREG[-1])))))
 
 #          Number of regions  
 nreg <-length(rawdata[-1,1])
-  
+
 #          Number of regions  
 ncolname <-names(rawdata)
 
@@ -89,43 +89,43 @@ newreg   <- regions$REG
 # 
 sink(paste(temp_dir,"/database.txt",sep=""))
 cat(paste(nreg, 'STRINGS LENGTH 12 header "H1" longname "Set REGIONS (',nreg,')";'))
-cat("\n","") 
-cat(paste(rawdata[-1,2], "  !  ", rawdata[-1,3], "\n", sep=""))
+cat("\n") 
+writeLines(paste(rawdata[-1,2], "!  ", rawdata[-1,3], sep="")) 
 cat("\n") 
 cat(paste(length(newreg), 'STRINGS LENGTH 12 header "H2" longname "Set NEW REGIONS (',length(newreg),')";'))
-cat("\n","") 
-cat(paste(newreg, "\n", sep=""))
+cat("\n") 
+writeLines(paste(newreg, sep=""))
 cat("\n") 
 cat(paste(nreg, 'STRINGS LENGTH 12 header "MP1" longname "Mapping from REGIONS to NEW REGIONS";'))
-cat("\n","") 
-cat(paste(rawdata[-1,1], "  !  ", rawdata[-1,3], "\n", sep=""))
+cat("\n") 
+writeLines(paste(rawdata[-1,1], "!  ", rawdata[-1,3], sep=""))
 cat("\n") 
 cat("\n") 
 cat(paste('4 STRINGS LENGTH 12 header "AGGC" longname "Set COMMODITIES";'))
 cat("\n")
-cat(" Crops","\n")
-cat(" Livestock","\n")
-cat(" Proc_Food","\n")
-cat(" Non_Food","\n")
+cat("Crops","\n")
+cat("Livestock","\n")
+cat("Proc_Food","\n")
+cat("Non_Food","\n")
 cat("\n") 
 cat("\n") 
 cat(paste('3 STRINGS LENGTH 12 header "AGGF" longname "Subset FOOD COMMODITIES";'))
 cat("\n")
-cat(" Crops","\n")
-cat(" Livestock","\n")
-cat(" Proc_Food","\n")
+cat("Crops","\n")
+cat("Livestock","\n")
+cat("Proc_Food","\n")
 cat("\n") 
 cat("\n") 
 cat(paste('2 STRINGS LENGTH 12 header "MKT" longname "Set CROP MARKETS";'))
 cat("\n")
-cat(" local","\n")
-cat(" global","\n")
+cat("local","\n")
+cat("global","\n")
 cat("\n") 
 cat("\n") 
 cat(paste('2 STRINGS LENGTH 12 header "COEF" longname "Set COEFFICIENTS";'))
 cat("\n")
-cat(" INT","\n")
-cat(" SLP","\n")
+cat("INT","\n")
+cat("SLP","\n")
 cat("\n") 
 #
 # ----- Define shares and parameters used in the database
@@ -133,9 +133,8 @@ cat("\n")
 for(i in 4:length(ncolname)){
 cat("\n") 
 cat(paste(nreg, ' REAL header "',ncolname[i],'" longname "',rawdata[1,i],'";', sep=""))
-cat("\n","") 
-#cat(paste(rawdata[-1,1], ",", as.numeric(rawdata[-1,i]), "\n", sep=""))
-cat(paste(as.numeric(rawdata[-1,i]), "\n", sep=""))
+cat("\n") 
+writeLines(paste(as.numeric(rawdata[-1,i]), sep=""))
 cat("\n") }
 sink()
 #
@@ -149,12 +148,9 @@ sink()
 #
 # ----- convert text file into har file
 #
-# Execute the command using system()
-
 command <- paste0("sh ",temp_dir,"/call_txt2har.bat")
-
-#changed code
 system(command, intern=TRUE, wait =TRUE)
+
 
 # ============================================================= #
 # Running script to create the database                         #
@@ -178,13 +174,9 @@ cat( 'XWrite (set) BASEYEAR to file REGDATA header  "YEAR"; \n ')
 cat( 'log file = no ; \n ')
 sink()
 
-
 sink(paste(temp_dir,"/database.bat", sep=""))
 cat("/gp12/data_proc/database.exe -cmf",paste0(temp_dir,'/database.CMF \n') )
 sink()
-
-
-
 
 system(paste0("sh ",temp_dir,'/database.bat'), intern=TRUE, wait =TRUE)
 
@@ -209,11 +201,9 @@ cat( 'XWrite (set) BASEYEAR to file LANDSETS header  "YEAR"; \n ')
 cat( 'log file = yes ; \n ')
 sink()
 
-#changed code
 sink(paste(temp_dir,"/aggregate.bat", sep=""))
 cat("/gp12/data_proc/aggregate.exe -cmf",paste0(temp_dir,'/aggregate.CMF'),"\n" )
 sink()
-
 
 system(paste0("sh ",temp_dir,'/aggregate.bat'), intern=TRUE, wait =TRUE)
 
